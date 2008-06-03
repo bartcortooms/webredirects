@@ -1,0 +1,10 @@
+Frontend
+--------
+
+- Invalidate memcached entries on changes in the webinterface.
+
+
+Backend
+-------
+
+- Remove Django dependency, to reduce memory usage per Apache process.

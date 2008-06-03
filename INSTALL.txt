@@ -1,0 +1,67 @@
+Requirements:
+
+	- Apache
+	- mod_python
+	- Django 0.96
+	- python-memcached (http://www.tummy.com/Community/software/python-memcached/)
+	- memcached (optional, but recommended)
+
+Create a directory to install webredirects, e.g. /opt/webredirects, and copy
+the contents of the frontend and backend directories to that directory.
+
+Frontend
+--------
+
+The frontend application uses the Django webapp framework.
+http://www.djangoproject.com/documentation/install/ has installation
+instructions for Django.  You can skip the "Apache and mod_python" section for
+now.
+
+After installing Django, copy or rename frontend/settings.py.example to
+frontend/settings.py and adjust it to reflect your database settings.  Then
+initialise the database with:
+
+	cd /opt/webredirects/frontend
+	python manage.py syncdb
+
+Start the Django application with:
+
+	python manage.py runserver 0.0.0.0:8000
+
+If all goes well, you'll be able to access the frontend at port 8000:
+
+	http://yourhost:8000/admin
+
+If this works, you can use Apache instead of manage.py to run the application.
+See the Django installation instructions in the URL mentioned above for
+information on how to do that.
+
+Backend
+-------
+
+Copy or rename backend/settings.py.example to backend/settings.py and change
+the settings to reflect your environment.
+
+Enable and configure mod_python for Apache.
+
+Installing memcached is optional, but will greatly increase the speed of the
+backend.  Make sure memcached either listens on localhost:11211, or edit
+backend/settings.py to reflect your memcached setup.
+
+Put the lines below in your Apache config, and then reload Apache.  Note that
+if you did not install webredirects in /opt/webredirects, you need to change
+PythonPath to reflect the location where you installed webredirects.
+
+NameVirtualHost *
+<VirtualHost *>
+	ServerAdmin webmaster@example.org
+
+	PythonPath "sys.path+['/opt/webredirects/backend', '/opt/webredirects']"
+	PythonDebug Off
+	PythonAutoReload Off
+	PythonHeaderParserHandler redirect
+	PythonTransHandler translate
+
+	ErrorLog /var/log/apache2/error.log
+	CustomLog /var/log/apache2/access.log combined
+</VirtualHost>
