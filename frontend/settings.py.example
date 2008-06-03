@@ -62,7 +62,7 @@ ROOT_URLCONF = 'frontend.urls'
 TEMPLATE_DIRS = (
     # Put strings here, like "/home/html/django_templates".
     # Always use forward slashes, even on Windows.
-    '/opt/static/templates',
+    '/opt/webredirects/frontend/templates',
 )
 
 INSTALLED_APPS = (
