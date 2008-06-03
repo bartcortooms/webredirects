@@ -18,8 +18,8 @@ instructions for Django.  You can skip the "Apache and mod_python" section for
 now.
 
 After installing Django, copy or rename frontend/settings.py.example to
-frontend/settings.py and adjust it to reflect your database settings.  Then
-initialise the database with:
+frontend/settings.py and adjust it to reflect your database settings and the
+location of the templates.  Then initialise the database with:
 
 	cd /opt/webredirects/frontend
 	python manage.py syncdb
