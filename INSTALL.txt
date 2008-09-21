@@ -46,7 +46,7 @@ Enable and configure mod_python for Apache.
 
 Installing memcached is optional, but will greatly increase the speed of the
 redirects.  Make sure memcached either listens on localhost:11211, or edit
-configuration.py to reflect your memcached setup.
+settings.py to reflect your memcached setup.
 
 Put the lines below in your Apache config, and then reload Apache.  Note that
 if you did not install webredirects in /opt/webredirects, you need to change
@@ -56,7 +56,7 @@ NameVirtualHost *
 <VirtualHost *>
 	ServerAdmin webmaster@example.org
 
-	PythonPath "sys.path+['/opt/webredirects']"
+	PythonPath "sys.path+['/opt', '/opt/webredirects']"
 	PythonDebug Off
 	PythonAutoReload Off
 	PythonHeaderParserHandler redirect
