@@ -67,6 +67,10 @@ def get_target_uri(hostname, path):
 def headerparserhandler(req):
 	target_uri = None
 
+	# Only redirect if a Host header has been set.
+	if req.hostname is None:
+		return apache.DECLINED
+
 	# Try a cached lookup first.
 	if use_memcache:
 		mc = memcache.Client(settings.MEMCACHED_SERVERS)
