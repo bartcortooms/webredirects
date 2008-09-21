@@ -14,7 +14,7 @@
         {{ stats.curr_items }} of {{ stats.total_items }}
     <li>cache hits:
         {{ stats.get_hits }} of {{ stats.cmd_get }}:
-        <b>{{ hit_rate }}%</b>
+        <b>{{ stats.hit_rate }}%</b>
     <li>cache traffic:
         {{ stats.bytes_read|filesizeformat }} in,
         {{ stats.bytes_written|filesizeformat }} out

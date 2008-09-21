@@ -25,7 +25,7 @@ def summary(request):
     data = host.get_stats()
 
     class Stats:
-    	pass
+        pass
 
     server_stats = []
     for server in data:
@@ -49,12 +49,12 @@ def summary(request):
             hit_rate = 100 * stats.get_hits / stats.cmd_get
         else:
             hit_rate = 0
+        setattr(stats, 'hit_rate', hit_rate)
 
         server_stats.append(stats)
 
     return render_to_response(
         'memcached_status/summary.html', dict(
             server_stats=server_stats,
-            hit_rate=hit_rate,
             time=datetime.datetime.now(), # server time
         ))
