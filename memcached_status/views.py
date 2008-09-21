@@ -21,41 +21,40 @@ def summary(request):
     if (settings.MEMCACHED_SERVERS is None) or (len(settings.MEMCACHED_SERVERS) == 0):
         raise http.Http404
 
-    host = memcache._Host(settings.MEMCACHED_SERVERS)
-    host.connect()
-    host.send_cmd("stats")
+    host = memcache.Client(settings.MEMCACHED_SERVERS)
+    data = host.get_stats()
 
     class Stats:
-        pass
+    	pass
 
-    stats = Stats()
+    server_stats = []
+    for server in data:
+        stats = Stats()
+        setattr(stats, 'hostname', server[0])
+        values = server[1]
+        for key in values:
+            value = values[key]
+            try:
+                # convert to native type, if possible
+                value = int(value)
+                if key == "uptime":
+                    value = datetime.timedelta(seconds=value)
+                elif key == "time":
+                    value = datetime.datetime.fromtimestamp(value)
+            except ValueError:
+                pass
+            setattr(stats, key, value)
 
-    while 1:
-        line = host.readline().split(None, 2)
-        if line[0] == "END":
-            break
-        stat, key, value = line
-        try:
-            # convert to native type, if possible
-            value = int(value)
-            if key == "uptime":
-                value = datetime.timedelta(seconds=value)
-            elif key == "time":
-                value = datetime.datetime.fromtimestamp(value)
-        except ValueError:
-            pass
-        setattr(stats, key, value)
+        if stats.cmd_get > 0:
+            hit_rate = 100 * stats.get_hits / stats.cmd_get
+        else:
+            hit_rate = 0
 
-    host.close_socket()
-
-    if stats.cmd_get > 0:
-        hit_rate = 100 * stats.get_hits / stats.cmd_get
-    else:
-        hit_rate = 0
+        server_stats.append(stats)
 
     return render_to_response(
         'memcached_status/summary.html', dict(
-            stats=stats,
+            server_stats=server_stats,
             hit_rate=hit_rate,
             time=datetime.datetime.now(), # server time
         ))
