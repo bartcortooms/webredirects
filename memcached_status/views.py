@@ -18,14 +18,10 @@ def summary(request):
             request.user.is_staff):
         raise http.Http404
 
-    # get first memcached URI
-    m = re.match(
-        "memcached://([.\w]+:\d+)", settings.MEMCACHED_SERVERS
-    )
-    if not m:
+    if (settings.MEMCACHED_SERVERS is None) or (len(settings.MEMCACHED_SERVERS) == 0):
         raise http.Http404
 
-    host = memcache._Host(m.group(1))
+    host = memcache._Host(settings.MEMCACHED_SERVERS)
     host.connect()
     host.send_cmd("stats")
 
