@@ -6,29 +6,32 @@ Requirements:
 	- python-memcached (http://www.tummy.com/Community/software/python-memcached/)
 	- memcached (optional, but recommended)
 
-Create a directory to install webredirects, e.g. /opt/webredirects, and copy
-the contents of the frontend and backend directories to that directory.
+To get the latest version of the webredirects, do:
 
-Frontend
---------
+	svn co http://svn.kumina.nl/webredirects/trunk webredirects
 
-The frontend application uses the Django webapp framework.
+Copy the webdirects to e.g. /opt/webredirects.  Then copy or rename
+settings.py.example to settings.py and change the settings to reflect your
+environment.
+
+Administration interface
+------------------------
+
+The webbased administration interface uses the Django framework.
 http://www.djangoproject.com/documentation/install/ has installation
 instructions for Django.  You can skip the "Apache and mod_python" section for
 now.
 
-After installing Django, copy or rename frontend/settings.py.example to
-frontend/settings.py and adjust it to reflect your database settings and the
-location of the templates.  Then initialise the database with:
+Initialise the database with:
 
-	cd /opt/webredirects/frontend
+	cd /opt/webredirects
 	python manage.py syncdb
 
 Start the Django application with:
 
 	python manage.py runserver 0.0.0.0:8000
 
-If all goes well, you'll be able to access the frontend at port 8000:
+If all goes well, you'll be able to access the admin interface at port 8000:
 
 	http://yourhost:8000/admin
 
@@ -36,17 +39,14 @@ If this works, you can use Apache instead of manage.py to run the application.
 See the Django installation instructions in the URL mentioned above for
 information on how to do that.
 
-Backend
--------
-
-Copy or rename backend/settings.py.example to backend/settings.py and change
-the settings to reflect your environment.
+Redirects
+---------
 
 Enable and configure mod_python for Apache.
 
 Installing memcached is optional, but will greatly increase the speed of the
-backend.  Make sure memcached either listens on localhost:11211, or edit
-backend/settings.py to reflect your memcached setup.
+redirects.  Make sure memcached either listens on localhost:11211, or edit
+configuration.py to reflect your memcached setup.
 
 Put the lines below in your Apache config, and then reload Apache.  Note that
 if you did not install webredirects in /opt/webredirects, you need to change
@@ -56,7 +56,7 @@ NameVirtualHost *
 <VirtualHost *>
 	ServerAdmin webmaster@example.org
 
-	PythonPath "sys.path+['/opt/webredirects/backend', '/opt/webredirects']"
+	PythonPath "sys.path+['/opt/webredirects']"
 	PythonDebug Off
 	PythonAutoReload Off
 	PythonHeaderParserHandler redirect

@@ -21,6 +21,7 @@ from django.contrib.sites.models import Site
 from django.contrib.auth.models import User
 from django.db.models import signals
 from django.dispatch import dispatcher
+import settings
 
 def site_get_absolute_url(self):
 	return "http://%s" % self.domain
@@ -65,3 +66,22 @@ class SiteAlias(models.Model):
 
 	def get_absolute_url(self):
 		return "http://%s" % self.alias
+
+# Remove cache entries for redirects from the memcache server(s)
+def invalidate_cache_entries(sender, instance, signal, *args, **kwargs):
+	if ((settings.MEMCACHED_SERVERS is None) or
+	    (len(settings.MEMCACHED_SERVERS) == 0)):
+		return
+
+	import memcache
+
+	# We don't know which cache entries exist, and instead of making things
+	# complicated for ourselves by trying to flush all possible
+	# combinations of sites aliases and URL redirects for the site, we just
+	# flush all cache entries.  Updates rarely happen, so this isn't a big
+	# deal.
+	mc = memcache.Client(settings.MEMCACHED_SERVERS)
+	mc.flush_all()
+
+dispatcher.connect(invalidate_cache_entries, signal=signals.post_save, sender=Site)
+dispatcher.connect(invalidate_cache_entries, signal=signals.post_delete, sender=Site)

@@ -22,9 +22,9 @@ import settings
 def transhandler(req):
 	domain = req.hostname
 
-	if not os.path.exists('%s/%s' % (settings.sites_root, domain)):
-		req.filename = '%s/%s' % (settings.placeholder_site, req.uri)
+	if not os.path.exists('%s/%s' % (settings.SITES_ROOT, domain)):
+		req.filename = '%s/%s' % (settings.PLACEHOLDER_SITE, req.uri)
 	else:
-		req.filename = '%s/%s/%s' % (settings.sites_root, domain, req.uri)
+		req.filename = '%s/%s/%s' % (settings.SITES_ROOT, domain, req.uri)
 
 	return apache.OK

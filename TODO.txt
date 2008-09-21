@@ -1,10 +1,9 @@
 Frontend
 --------
 
-- Invalidate memcached entries on changes in the webinterface.
-
 
 Backend
 -------
 
-- Remove Django dependency, to reduce memory usage per Apache process.
+- Don't use Django for the fetching the redirects in redirect.py, to reduce memory
+  usage per Apache process.

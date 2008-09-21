@@ -1,14 +1,5 @@
-# Django settings for webredirects frontend project.
-
-DEBUG = True
-TEMPLATE_DEBUG = DEBUG
-
-ADMINS = (
-#    ('Me', 'myaddress@example.org'),
-)
-
-MANAGERS = ADMINS
-
+# Database configuration
+#
 DATABASE_ENGINE = 'sqlite3'    # 'postgresql', 'mysql', 'sqlite3' or 'ado_mssql'.
 DATABASE_NAME = '/opt/webredirects/db/sqlite.db' # Or path to database file if using sqlite3.
 DATABASE_USER = ''             # Not used with sqlite3.
@@ -16,9 +7,53 @@ DATABASE_PASSWORD = ''         # Not used with sqlite3.
 DATABASE_HOST = ''             # Set to empty string for localhost. Not used with sqlite3.
 DATABASE_PORT = ''             # Set to empty string for default. Not used with sqlite3.
 
+# The directory where all the subdirectories with the sites are located.  Each
+# site needs to have its own subdirectory inside sites_root, and the directory
+# for each site needs to be named after the canonical domain name for that
+# site, including a leading 'www.'.  E.g., if sites_root is set to '/var/www',
+# the site for www.example.org needs to be in /var/www/www.example.org/.
+#
+SITES_ROOT = '/var/www'
+
+# The directory with the fall-through placeholder site, for domains which do
+# not yet have a directory inside sites_root.  If a domain points to the Apache
+# webserver, the domain is not an alias for a different domain, and no
+# directory inside sites_root which is named after the domain name exists, then
+# the placeholder site will be shown.  The value of placeholder_site needs to
+# be the name of an existing directory.
+#
+PLACEHOLDER_SITE = '/var/www/placeholder'
+
+# One or more addresses of memcached servers.  This can either be a string or a
+# Python list, allowing you to use multiple memcached servers by setting the
+# value to something like ['memcache://<address>:port',
+# 'memcache://<address>:<port>', ...].  If you don't want to use memcached, you
+# can disable it by setting the value of memcached_servers to None.
+#
+# Multiple memcached servers
+#MEMCACHED_SERVERS = ['memcached://192.168.1.20:11211', 'memcached://192.168.1.21:11211']
+#
+# Disable memcached
+#MEMCACHED_SERVERS = None
+#
+MEMCACHED_SERVERS = 'memcached://127.0.0.1:11211'
+
 # Local time zone for this installation. All choices can be found here:
 # http://www.postgresql.org/docs/current/static/datetime-keywords.html#DATETIME-TIMEZONE-SET-TABLE
 TIME_ZONE = 'Europe/Amsterdam'
+
+# Django settings for webredirects administration interface.  Most of these
+# settings you can leave alone.  See
+# http://docs.djangoproject.com/en/dev/topics/settings/ for more information.
+#
+DEBUG = False
+TEMPLATE_DEBUG = DEBUG
+
+ADMINS = (
+#    ('Me', 'myaddress@example.org'),
+)
+
+MANAGERS = ADMINS
 
 # Language code for this installation. All choices can be found here:
 # http://www.w3.org/TR/REC-html40/struct/dirlang.html#langcodes
@@ -57,12 +92,13 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.doc.XViewMiddleware',
 )
 
-ROOT_URLCONF = 'frontend.urls'
+ROOT_URLCONF = 'webredirects.urls'
 
+import os
 TEMPLATE_DIRS = (
     # Put strings here, like "/home/html/django_templates".
     # Always use forward slashes, even on Windows.
-    '/opt/webredirects/frontend/templates',
+    '%s/%s' % (os.path.dirname(__file__), 'templates'),
 )
 
 INSTALLED_APPS = (
@@ -71,5 +107,6 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.sites',
     'django.contrib.admin',
-    'frontend.redirects',
+    'webredirects.redirects',
+    'webredirects.memcached_status',
 )

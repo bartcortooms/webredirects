@@ -19,16 +19,16 @@ from mod_python import apache, util
 import os, re
 import settings
 
-if (settings.memcached_servers is not None) and (len(settings.memcached_servers) > 0):
+if (settings.MEMCACHED_SERVERS is not None) and (len(settings.MEMCACHED_SERVERS) > 0):
 	import memcache
 	use_memcache = True
 else:
 	use_memcache = False
 
-os.environ["DJANGO_SETTINGS_MODULE"] = "frontend.settings"
+os.environ["DJANGO_SETTINGS_MODULE"] = "webredirects.settings"
 
 from django.contrib.sites.models import Site
-from frontend.redirects.models import SiteAlias, Redirect
+from webredirects.redirects.models import SiteAlias, Redirect
 from django.core.exceptions import ObjectDoesNotExist
 
 def get_target_uri(hostname, path):
@@ -69,7 +69,7 @@ def headerparserhandler(req):
 
 	# Try a cached lookup first.
 	if use_memcache:
-		mc = memcache.Client(settings.memcached_servers)
+		mc = memcache.Client(settings.MEMCACHED_SERVERS)
 		target_uri = mc.get(req.hostname + req.uri)
 
 	# Do a full lookup if there is no cache entry.
