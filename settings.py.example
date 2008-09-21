@@ -26,17 +26,17 @@ PLACEHOLDER_SITE = '/var/www/placeholder'
 
 # One or more addresses of memcached servers.  This can either be a string or a
 # Python list, allowing you to use multiple memcached servers by setting the
-# value to something like ['memcache://<address>:port',
-# 'memcache://<address>:<port>', ...].  If you don't want to use memcached, you
-# can disable it by setting the value of memcached_servers to None.
+# value to something like ['<address>:port', '<address>:<port>', ...].  If you
+# don't want to use memcached, you can disable it by setting the value of
+# memcached_servers to None.
 #
 # Multiple memcached servers
-#MEMCACHED_SERVERS = ['memcached://192.168.1.20:11211', 'memcached://192.168.1.21:11211']
+#MEMCACHED_SERVERS = ['192.168.1.20:11211', '192.168.1.21:11211']
 #
 # Disable memcached
 #MEMCACHED_SERVERS = None
 #
-MEMCACHED_SERVERS = 'memcached://127.0.0.1:11211'
+MEMCACHED_SERVERS = '127.0.0.1:11211'
 
 # Local time zone for this installation. All choices can be found here:
 # http://www.postgresql.org/docs/current/static/datetime-keywords.html#DATETIME-TIMEZONE-SET-TABLE
