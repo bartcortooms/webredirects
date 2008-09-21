@@ -20,7 +20,7 @@ import os, re
 import settings
 
 if (settings.MEMCACHED_SERVERS is not None) and (len(settings.MEMCACHED_SERVERS) > 0):
-	import memcache
+	import cmemcache
 	use_memcache = True
 else:
 	use_memcache = False
@@ -73,7 +73,7 @@ def headerparserhandler(req):
 
 	# Try a cached lookup first.
 	if use_memcache:
-		mc = memcache.Client(settings.MEMCACHED_SERVERS)
+		mc = cmemcache.Client(settings.MEMCACHED_SERVERS)
 		target_uri = mc.get(req.hostname + req.uri)
 
 	# Do a full lookup if there is no cache entry.

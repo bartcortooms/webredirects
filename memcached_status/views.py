@@ -10,7 +10,7 @@ import datetime, re
 @login_required
 def summary(request):
     try:
-        import memcache
+        import cmemcache
     except ImportError:
         raise http.Http404
 
@@ -21,7 +21,7 @@ def summary(request):
     if (settings.MEMCACHED_SERVERS is None) or (len(settings.MEMCACHED_SERVERS) == 0):
         raise http.Http404
 
-    host = memcache.Client(settings.MEMCACHED_SERVERS)
+    host = cmemcache.Client(settings.MEMCACHED_SERVERS)
     data = host.get_stats()
 
     class Stats:

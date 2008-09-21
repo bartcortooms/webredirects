@@ -73,14 +73,14 @@ def invalidate_cache_entries(sender, instance, signal, *args, **kwargs):
 	    (len(settings.MEMCACHED_SERVERS) == 0)):
 		return
 
-	import memcache
+	import cmemcache
 
 	# We don't know which cache entries exist, and instead of making things
 	# complicated for ourselves by trying to flush all possible
 	# combinations of sites aliases and URL redirects for the site, we just
 	# flush all cache entries.  Updates rarely happen, so this isn't a big
 	# deal.
-	mc = memcache.Client(settings.MEMCACHED_SERVERS)
+	mc = cmemcache.Client(settings.MEMCACHED_SERVERS)
 	mc.flush_all()
 
 dispatcher.connect(invalidate_cache_entries, signal=signals.post_save, sender=Site)
